@@ -1,56 +1,158 @@
-let opcion, cantPublicaciones;
-let ofertaCargadas=0, cantOfertas=0, oferta, nombreProveedor;
+let opcion, cantPublicaciones, nuevaPublicacion;
 let nombre, origen, destino, fechaVto, Presupuesto;
+let ofertaCargadas=0, cantOfertas=0, oferta, nombreProveedor, nuevaOferta;
+let maxIdPublicacion=0;
 
-const agreagarPublicacion = () => {
-    cantPublicaciones+=1;
+const publicaciones = [];
+const ofertas = [];
+
+class Publicacion {
+    constructor(nombre, origen, destion, fechaVto, presupuesto){
+        this.id = maxIdPublicacion+1;
+        this.nombre = nombre;
+        this.origen = origen;
+        this.destino = destino;
+        this.fechaVto = fechaVto;
+        this.presupuesto = presupuesto;
+    }
+    agregarPublicacion(){
+        cantPublicaciones+=1;
+        maxIdPublicacion+=1;
+    }
 }
-const agreagarOferta = () => {
-    cantOfertas+=1;
+class Oferta{
+    constructor(idPublicacion,nombreProveedor,oferta){
+        this.idPublicacion=idPublicacion
+        this.nombreProveedor=nombreProveedor
+        this.oferta=oferta
+    }
+    agregarOferta(){
+        cantOfertas+=1;
+    }
+}
+let  strMensaje="";publicConOferta=0;
+const mostarPublicacionesYOfertas = (actualizaString=0, mostarOfertas=0) => {
+    let strTemp="";//=strMensaje;    
+    if(publicaciones.length<1){
+        strTemp="No se cargaron publicaciones aun.";
+    }
+    for(const p of publicaciones){
+        strTemp=strTemp+"------------------------------------\nPUBLICACION\n------------------------------------\n";
+        strTemp=strTemp+"["+p.id+"]\n'"+p.nombre+"'\nOrigen: "+p.origen+"\nDestino: "+p.destino+"\nFechaVto: "+p.fechaVto+"\nPresupuesto: "+p.presupuesto+"\n";
+        
+        if(mostarOfertas==1){
+            strTemp=strTemp+"------------------------------------\nOFERTAS\n------------------------------------\n";
+            for(const o of ofertas){
+                if(p.id==o.idPublicacion){
+                    publicConOferta=1;
+                    strTemp=strTemp+"Proveedor: '"+o.nombreProveedor+"'\nOferta: "+o.oferta+"\n";
+                }
+            }
+            if(publicConOferta==0)
+            {
+                strTemp=strTemp+"--SIN OFERTAS--\n";
+            }
+            strTemp=strTemp+"------------------------------------\n\n";
+        }        
+    }
+    if(actualizaString==1){
+        strMensaje=strTemp;
+    }
+    alert(strTemp); 
+    console.clear();
+    console.log(strTemp);
 }
 
 do {
-    opcion=parseInt(prompt("------Menu------\n1-/Cargar Publicación \n2-/Cargar Oferta \n0-/Salir \nOpcion: "));    
+    opcion=parseInt(prompt("------------------------------------\nMENU\n------------------------------------\n1-/Cargar Publicación\n2-/Ver Publicaciones\n3-/Cargar Oferta \n0-/Salir \nOpcion: "));    
 
     switch (opcion) {
-        case 1:            
-            alert("Ingrese la siguiente informacion de la publicación");
-            nombre = prompt("Nombre de la publicación:","Envío caja Rosario a La Plata");
-            origen = prompt("Ciudad Origen", "Rosario, Santa Fe");
-            destino = prompt("Ciudad Destino", "La Plata, Buenos Aires");
-            fechaVto=prompt("Fecha Vto de la publicación", "31/12/2022");
-            Presupuesto=parseFloat(prompt("Presupuesto límite"));
-
-            agreagarPublicacion();
+        case 1:   
+            let titulo="Ingrese la siguiente informacion de la publicación\n\n";
+            nombre = prompt(titulo+"Nombre de la publicación:","Envío caja Rosario a La Plata");
+            origen = prompt(titulo+"Ciudad Origen", "Rosario, Santa Fe");
+            destino = prompt(titulo+"Ciudad Destino", "La Plata, Buenos Aires");
+            fechaVto=prompt(titulo+"Fecha Vto de la publicación", "31/12/2022");
+            presupuesto=parseFloat(prompt(titulo+"Presupuesto límite"));
+            //Reemplazo la entrega anterior por instancias de clases, sus metodos y los agrego a un Array
+            nuevaPublicacion=new Publicacion(nombre, origen, destino, fechaVto, presupuesto);
+            publicaciones.push(nuevaPublicacion);
+            nuevaPublicacion.agregarPublicacion(); 
+            mostarPublicacionesYOfertas(1,1);           
             break;
         case 2:
+            mostarPublicacionesYOfertas(0,1);            
+            break;
+        case 3:
             if (cantPublicaciones == null || cantPublicaciones =="") {
-                alert("Primero cargue una publicación"); 
+                alert("No existen publicaciones a ofertar."); 
             } else {
-                nombreProveedor=prompt("Indique su nombre");
-                oferta = parseFloat(prompt("Ingrese su oferta para la publicación <"+nombre+">"));
-                agreagarOferta();
+                let idPublic=0, idPublicaValido=0, encontrado=0;
+                do {
+                    //Muestro todas las publicaciones al proveedor
+                    mostarPublicacionesYOfertas(0,1);     
+                                        
+                    idPublic=prompt("Indique la publicacion a ofertas:");
+                
+                    if(parseInt(idPublic)==0)
+                    {
+                        alert("Ingrese un N° de Publicacion válido");
+                        mostarPublicacionesYOfertas(0,1);     
+                    }
+                    else
+                    {
+                        //Busco en el array de publicaciones la opción ingresada
+                        for(const i of publicaciones){
+                            console.log("iteracion "+i);
+                            if(i.id==idPublic){                                
+                                idPublicaValido=1;
+                                encontrado=1;                                
+                                //Le doy la posibilidad de cambiar de Publicación antes de realizar una oferta
+                                let opcion=parseInt(
+                                                    prompt("Usted seleccionó la publicacion '"+i.nombre+
+                                                    "'\n\n¿Desea cambiar su selección? [0-No/1-Si]")
+                                                    );
+                                if(opcion==1)
+                                {
+                                    idPublicaValido=0;
+                                    break;
+                                }
+                            }     
+                        }
+                        //Controlo si terminó de recorrer el array y no encontró el ID
+                        if(encontrado==0)
+                        {
+                            alert("La opción ingresada no estaba entre las posibles");
+                        }
+                    }
+                    console.log("idPublicaValido:"+idPublicaValido);
+                } while (idPublicaValido==0); 
+                console.log("salió");
+                if(idPublic!=null && idPublic>0)
+                {
+                    nombreProveedor=prompt("Indique su Nombre/Razon Social");
+                    oferta = parseFloat(prompt("Ingrese su oferta para la publicación"));
+                    //Reemplazo la entrega anterior por instancias de clases, sus metodos y los agrego a un Array
+                    nuevaOferta=new Oferta(idPublic, nombreProveedor, oferta);
+                    ofertas.push(nuevaOferta);
+                    nuevaOferta.agregarOferta();
+                    mostarPublicacionesYOfertas(1,1);
+                }
+                else{
+                    alert("No se encontró el idPublic")
+                };
             }
             break;
         default:
             break;
     }
-    if (cantOfertas != null && cantOfertas != "") {
-        opcion=0;   
+    if (cantOfertas != null && cantOfertas != "") {          
         ofertaCargadas=1;     
-    }else{
-        alert("Usted no completó la carga de datos.");        
-    }    
+    }
 } while (opcion>0);
 
-if(ofertaCargadas){
-    alert("------------------------------------\nPUBLACIÓN\n------------------------------------\nPublicación: "+nombre+
-        "\nOrigen: "+origen+
-        "\nDestino: "+destino+
-        "\nPresupuesto: "+Presupuesto+
-        "\n------------------------------------\nOFERTAS\n------------------------------------\nCantidad de Ofertas: "+cantOfertas+
-        "\nProveedor <"+nombreProveedor+"> Oferta: "+oferta);
-    
+if(ofertaCargadas){    
+    mostarPublicacionesYOfertas(0,1);       
 }
 
-alert("Gracias, vuelva prontos!");
+alert("Gracias, vuelva pronto!");
