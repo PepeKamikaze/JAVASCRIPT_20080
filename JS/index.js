@@ -42,6 +42,8 @@ const mostarPublicacionesYOfertas = (actualizaString=0, mostarOfertas=0) => {
         
         if(mostarOfertas==1){
             strTemp=strTemp+"------------------------------------\nOFERTAS\n------------------------------------\n";
+            //ordeno por la mejor oferta antes de recorrer y armar el string.
+            ofertas.sort((a,b) => a.oferta - b.oferta);
             for(const o of ofertas){
                 if(p.id==o.idPublicacion){
                     publicConOferta=1;
@@ -56,6 +58,7 @@ const mostarPublicacionesYOfertas = (actualizaString=0, mostarOfertas=0) => {
         }        
     }
     if(actualizaString==1){
+        //strTemp.sort((a,b) => b.Oferta.Oferta-a);
         strMensaje=strTemp;
     }
     alert(strTemp); 
@@ -87,7 +90,7 @@ do {
             if (cantPublicaciones == null || cantPublicaciones =="") {
                 alert("No existen publicaciones a ofertar."); 
             } else {
-                let idPublic=0, idPublicaValido=0, encontrado=0;
+                let idPublic=0, idPublicaValido=0, busquedaPublic;
                 do {
                     //Muestro todas las publicaciones al proveedor
                     mostarPublicacionesYOfertas(0,1);     
@@ -102,32 +105,25 @@ do {
                     else
                     {
                         //Busco en el array de publicaciones la opción ingresada
-                        for(const i of publicaciones){
-                            console.log("iteracion "+i);
-                            if(i.id==idPublic){                                
-                                idPublicaValido=1;
-                                encontrado=1;                                
-                                //Le doy la posibilidad de cambiar de Publicación antes de realizar una oferta
-                                let opcion=parseInt(
-                                                    prompt("Usted seleccionó la publicacion '"+i.nombre+
-                                                    "'\n\n¿Desea cambiar su selección? [0-No/1-Si]")
-                                                    );
-                                if(opcion==1)
-                                {
-                                    idPublicaValido=0;
-                                    break;
-                                }
-                            }     
-                        }
-                        //Controlo si terminó de recorrer el array y no encontró el ID
-                        if(encontrado==0)
-                        {
+                        if(publicaciones.find((el)=>el.id==idPublic)){
+                            idPublicaValido=1;                           
+                            //Le doy la posibilidad de cambiar de Publicación antes de realizar una oferta
+                            busquedaPublic=publicaciones.filter((el)=>el.id==idPublic);
+                            let opcion=parseInt(
+                                                prompt("Usted seleccionó la publicacion '"+busquedaPublic.nombre+
+                                                "'\n\n¿Desea cambiar su selección? [0-No/1-Si]")
+                                                );
+                            if(opcion==1)
+                            {
+                                idPublicaValido=0;
+                            }
+                        }                        
+                        else
+                        {//Controlo si terminó de recorrer el array y no encontró el ID
                             alert("La opción ingresada no estaba entre las posibles");
                         }
                     }
-                    console.log("idPublicaValido:"+idPublicaValido);
                 } while (idPublicaValido==0); 
-                console.log("salió");
                 if(idPublic!=null && idPublic>0)
                 {
                     nombreProveedor=prompt("Indique su Nombre/Razon Social");
