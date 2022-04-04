@@ -2,6 +2,8 @@ let opcion, cantPublicaciones, nuevaPublicacion;
 let nombre, origen, destino, fechaVto, Presupuesto;
 let ofertaCargadas=0, cantOfertas=0, oferta, nombreProveedor, nuevaOferta;
 let maxIdPublicacion=0;
+//----------Variables para trabajar con DOM-------------------------------
+let divPasos = document.getElementById('divpasos');
 
 const publicaciones = [];
 const ofertas = [];
@@ -81,7 +83,17 @@ do {
             nuevaPublicacion=new Publicacion(nombre, origen, destino, fechaVto, presupuesto);
             publicaciones.push(nuevaPublicacion);
             nuevaPublicacion.agregarPublicacion(); 
-            mostarPublicacionesYOfertas(1,1);           
+            mostarPublicacionesYOfertas(1,1); 
+            
+            //DOM            
+            let ulPasos = document.createElement('ul');
+            ulPasos.className=`pasos`;
+            ulPasos.innerHTML = `<li class="paso1"><strong>Paso 1: Cargar Publicación </strong></li>
+                                <li class="oculto"><strong>Paso 2: Cargar Oferta </strong></li>
+                                    `;
+            divPasos.append(ulPasos);
+            console.log(divPasos);
+            
             break;
         case 2:
             mostarPublicacionesYOfertas(0,1);            
@@ -133,6 +145,9 @@ do {
                     ofertas.push(nuevaOferta);
                     nuevaOferta.agregarOferta();
                     mostarPublicacionesYOfertas(1,1);
+                    
+                    document.getElementsByClassName("oculto").className = "visible";
+                    
                 }
                 else{
                     alert("No se encontró el idPublic")
@@ -152,3 +167,4 @@ if(ofertaCargadas){
 }
 
 alert("Gracias, vuelva pronto!");
+console.log(divPasos);
