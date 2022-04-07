@@ -168,3 +168,13 @@ if(ofertaCargadas){
 
 alert("Gracias, vuelva pronto!");
 console.log(divPasos);
+
+
+let boton = document.getElementById("btnAgregarEvento");
+
+boton.onclick = (e) =>{
+    console.log("ASDASDADS");
+    let parrafo = document.createElement("p");
+    parrafo.textContent="Nuevo Parrafo";
+    document.body.appendChild(parrafo);
+ };
