@@ -8,19 +8,38 @@
         <link href="css/starter-template.css" rel="stylesheet">
     </head>
     <body>
-        <h1>TuEnvío</h1>
-        <br></br>
-        <h3>Recuende realizar los siguientes 2 pasos</h3>
-        <br></br>
-        <div id="divpasos"> 
-
-        </div>       
-        <h1>Acá empieza el desafio N°6</h1>
-        
-        <button id="btnAgregarEvento">AgregarEvento</button>
-        <div id="bloqueParrafo">
-
+        <header>
+            <h1>TuEnvío</h1>
+            <div id="login">
+                <label>Usuario:<input type="text" id="loginUser"></label>
+                <label>Contraseña:<input type="password" id="loginPassword"></label>
+                <label><input id="chkRememberUser" type="checkbox">Recordar usuario</label>
+                <button id="btnLogin">Ingresar</button>
+            </div>
+        </header>
+        <br>
+        <div id="filters">
+            <h3 id="titleFilter">Filtros</h3>
+            <input type="search" id="filterOrigin">
+            <input type="search" id="filterdestination">
+            <input type="search" id="filterDateEnd">
+            <label><input type="checkbox" id="filterMyServices">Mis Servicios</label>
+            <label><input type="checkbox" id="filterMySuscriptions" title="Mis Suscripciones">Mis Suscripciones</label>
+            <button id="btnClearFilters">Limpiar filtros</button>
         </div>
+        <br>
+        <div id="sectionNewService">
+            <button id="btnAddServiceBlank">Crear Servicio</button>
+        </div>
+        <br>
+        <div id="sectionListServices">
+                        
+        </div>
+        <br>        
+        <footer>
+            <p id="Rights">Todos los derechos reservados 2022&#174;</p>
+        </footer>
+
         <script src="JS/index.js"></script>
     </body>
 </html>

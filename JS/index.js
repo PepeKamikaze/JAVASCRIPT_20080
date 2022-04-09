@@ -68,6 +68,8 @@ const mostarPublicacionesYOfertas = (actualizaString=0, mostarOfertas=0) => {
     console.log(strTemp);
 }
 
+/*
+
 do {
     opcion=parseInt(prompt("------------------------------------\nMENU\n------------------------------------\n1-/Cargar Publicación\n2-/Ver Publicaciones\n3-/Cargar Oferta \n0-/Salir \nOpcion: "));    
 
@@ -169,12 +171,104 @@ if(ofertaCargadas){
 alert("Gracias, vuelva pronto!");
 console.log(divPasos);
 
+let sectionNewService = document.getElementById("sectionNewService");
+let btnNewService = document.getElementById("btnNewService");
 
-let boton = document.getElementById("btnAgregarEvento");
+btnNewService.onclick = (e) =>{
+    let newService = document.createElement("p");
+    let sectionNewService = document.getElementById("sectionNewService");
+    newService.textContent="Nuevo Servicio";
+    sectionNewService.appendChild(newService);
+}
+*/
+let chkRememberUser = document.getElementById("chkRememberUser");
+let btnLogin = document.getElementById("btnLogin");
+let user=document.getElementById("loginUser").value;
 
-boton.onclick = (e) =>{
-    console.log("ASDASDADS");
-    let parrafo = document.createElement("p");
-    parrafo.textContent="Nuevo Parrafo";
-    document.body.appendChild(parrafo);
+btnLogin.onclick = (e) =>{
+    if(user === "null")
+    {
+        alert("Ingrese un usuario");        
+    }
+    else
+    {
+        if(chkRememberUser.checked===true)
+        {
+            alert(user);
+            console.log("localStorage");
+            localStorage.setItem("usuario",user.value);
+        }
+        else
+        {
+            console.log("sessionStorage");
+            sessionStorage.setItem("usuario",user.value);
+        }          
+    }    
+}
+
+
+let filters = document.getElementById("filters");
+let btnClearFilters = document.getElementById("btnClearFilters");
+/*
+btnClearFilters.onclick = (e) =>{
+   let filterOrigin = getElementById("filterOrigin");
+   filterOrigin.innerText="";
+   filters.append(filterOrigin);
+   
+   let destination = getElementById("filterdestination");
+   destination.innerText="";
+   let dateEnd = getElementById("filterDateEnd");
+   dateEnd.innerText="";
+   let myServices = getElementById("filterMyServices");
+   myServices.setSelected(false);
+}
+*/
+
+let btnAddServiceBlank = document.getElementById("btnAddServiceBlank");
+
+btnAddServiceBlank.onclick = (e) =>{    
+    let listaServicios = document.getElementById("sectionListServices");
+
+    let lblNameService= document.createElement("label");
+    lblNameService.innerText="Nombre ";
+    let nameService = document.createElement("input");
+    lblNameService.appendChild(nameService);
+
+    let lblorigin = document.createElement("label");
+    lblorigin.innerText="Origen ";
+    let origin = document.createElement("input");
+    lblorigin.appendChild(origin);
+
+    let lblDestination = document.createElement("label");
+    lblDestination.innerText="Destino ";
+    let destination = document.createElement("input");
+    lblDestination.appendChild(destination);
+
+    let lblDateEnd = document.createElement("label");
+    lblDateEnd.innerText="Fecha Fin";
+    let dateEnd = document.createElement("input");
+    lblDateEnd.appendChild(dateEnd);
+
+    let lblBadget = document.createElement("label");
+    lblBadget.innerText="Presupuesto";
+    let badget = document.createElement("input");
+    lblBadget.appendChild(badget);
+
+    let btnPublishService = document.createElement("button");
+    btnPublishService.innerText="Publicar";
+
+    //Agrego un salto
+    let jumpNewServiceIni = document.createElement("br");
+    listaServicios.appendChild(jumpNewServiceIni);
+
+    listaServicios.appendChild(lblNameService);
+    listaServicios.appendChild(lblorigin);
+    listaServicios.appendChild(lblDestination);
+    listaServicios.appendChild(lblDateEnd);
+    listaServicios.appendChild(lblBadget);
+    listaServicios.appendChild(btnPublishService);
+    let jumpNewServiceEnd = document.createElement("br");
+    listaServicios.appendChild(jumpNewServiceEnd);
+
+
  };
