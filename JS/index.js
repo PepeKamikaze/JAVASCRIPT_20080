@@ -181,27 +181,25 @@ btnNewService.onclick = (e) =>{
     sectionNewService.appendChild(newService);
 }
 */
-let chkRememberUser = document.getElementById("chkRememberUser");
 let btnLogin = document.getElementById("btnLogin");
-let user=document.getElementById("loginUser").value;
 
 btnLogin.onclick = (e) =>{
+    let chkRememberUser = document.getElementById("chkRememberUser");    
+    let user=document.getElementById("loginUser").value;
     if(user === "null")
     {
         alert("Ingrese un usuario");        
     }
     else
     {
+        console.log(user);
         if(chkRememberUser.checked===true)
         {
-            alert(user);
-            console.log("localStorage");
-            localStorage.setItem("usuario",user.value);
+            localStorage.setItem("usuario",user);
         }
         else
         {
-            console.log("sessionStorage");
-            sessionStorage.setItem("usuario",user.value);
+            sessionStorage.setItem("usuario",user);
         }          
     }    
 }
@@ -224,9 +222,12 @@ btnClearFilters.onclick = (e) =>{
 }
 */
 
-let btnAddServiceBlank = document.getElementById("btnAddServiceBlank");
 
-btnAddServiceBlank.onclick = (e) =>{    
+let btnAddServiceBlank = document.getElementById("btnAddServiceBlank");
+let jsonNewPublish;
+
+btnAddServiceBlank.onclick = (e) =>{
+    
     let listaServicios = document.getElementById("sectionListServices");
 
     let lblNameService= document.createElement("label");
@@ -270,5 +271,29 @@ btnAddServiceBlank.onclick = (e) =>{
     let jumpNewServiceEnd = document.createElement("br");
     listaServicios.appendChild(jumpNewServiceEnd);
 
+    nameService.value="nombre";
+    origin.value="rosario";
+    destination.value="CABA";
+    dateEnd="01/01/2022";
+    badget="123.00";
+    let nuevaPublicacion=new Publicacion(nameService, origin, destination, dateEnd, badget);
+    jsonNewPublish = JSON.stringify(nuevaPublicacion);
+    console.log(nuevaPublicacion);
+    console.log(jsonNewPublish);
 
+    //Muestro elJavaScript como objeto JSon
+    let parrafoJSON = document.createElement("p");
+    parrafoJSON.innerText=jsonNewPublish;
+    listaServicios.appendChild(parrafoJSON);
+
+    let jump = document.createElement("br");
+    listaServicios.appendChild(jump);
+    
+    //Muestro el JSon como objeto JavaScript
+    let jsonToJS = JSON.parse(jsonNewPublish);    
+    let parrafoJS = document.createElement("p");
+    parrafoJS.innerText=jsonToJS;
+    listaServicios.appendChild(parrafoJS);
  };
+
+ 
