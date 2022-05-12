@@ -1,15 +1,5 @@
-let opcion, cantPublicaciones, nuevaPublicacion;
-let nombre, origen, destino, fechaVto, Presupuesto;
-let ofertaCargadas=0, cantOfertas=0, oferta, nombreProveedor, nuevaOferta;
-let maxIdPublicacion=0;
-//----------Variables para trabajar con DOM-------------------------------
-let divPasos = document.getElementById('divpasos');
-
-const publicaciones = [];
-const ofertas = [];
-
 class Publicacion {
-    constructor(nombre, origen, destion, fechaVto, presupuesto){
+    constructor(nombre, origen, destino, fechaVto, presupuesto){
         this.id = maxIdPublicacion+1;
         this.nombre = nombre;
         this.origen = origen;
@@ -18,8 +8,8 @@ class Publicacion {
         this.presupuesto = presupuesto;
     }
     agregarPublicacion(){
-        cantPublicaciones+=1;
-        maxIdPublicacion+=1;
+        cantPublicaciones++;
+        maxIdPublicacion++;
     }
 }
 class Oferta{
@@ -29,9 +19,197 @@ class Oferta{
         this.oferta=oferta
     }
     agregarOferta(){
-        cantOfertas+=1;
+        cantOfertas++;
     }
 }
+
+const publicaciones = [];
+const ofertas = [];
+
+let opcion, cantPublicaciones, nuevaPublicacion;
+let nombre, origen, destino, fechaVto, Presupuesto;
+let ofertaCargadas=0, cantOfertas=0, oferta, nombreProveedor, nuevaOferta;
+let maxIdPublicacion=0;
+//----------Variables para trabajar con DOM-------------------------------
+
+//#region INICIALIZAR OBJETOS
+let p1 =new Publicacion('cajita de Rosario a CABA', 'Rosario', 'CABA', '31/12/2022', 100.00);
+let p2 =new Publicacion('cajita de CABA a Rosario', 'CABA', 'Rosario', '31/12/2022', 150.00);
+p1.agregarPublicacion();
+p2.agregarPublicacion();
+let o1p1=new Oferta(1, 'Comisionista', 90) ;
+let o2p1 = new Oferta(1, 'Viajante', 80);
+let o1p2= new Oferta(2, 'Flete', 200);
+o1p1.agregarOferta();
+o2p1.agregarOferta();
+o1p2.agregarOferta();
+//#endregion
+
+//#region LOGIN
+let btnLogin = document.getElementById("btnLogin");
+
+btnLogin.onclick = (e) =>{
+    let chkRememberUser = document.getElementById("chkRememberUser");    
+    let user=document.getElementById("loginUser").value;
+    //Optimizacion
+    user === "null" ? alert("Ingrese un usuario") : (
+            console.log(user),            
+            chkRememberUser.checked===true ? localStorage.setItem("usuario",user) : sessionStorage.setItem("usuario",user)
+        )
+}
+//#endregion
+
+
+//#region FILTROS
+
+let filters = document.getElementById("filters");
+let filterOrigin = document.getElementById("filterOrigin");
+let filterdestination = document.getElementById("filterdestination");
+let filterDateEnd = document.getElementById("filterDateEnd");
+let filterMyServices = document.getElementById("filterMyServices");
+let filterMySuscriptions = document.getElementById("filterMySuscriptions");
+
+
+filterOrigin.onchange=()=>{
+    btnClearFilters.hidden=false;
+}
+filterdestination.onchange=()=>{
+    btnClearFilters.hidden=false;
+}
+filterDateEnd.onchange=()=>{
+    btnClearFilters.hidden=false;
+}
+filterMyServices.onchange=()=>{
+    btnClearFilters.hidden=false;
+}
+filterMySuscriptions.onchange=()=>{
+    btnClearFilters.hidden=false;
+}
+
+let btnClearFilters = document.getElementById("btnClearFilters");
+
+btnClearFilters.onclick = (e) =>{   
+   filterOrigin.value=null;
+   filterdestination.value=null;
+   filterDateEnd.value=null;
+   filterMyServices.checked=false;
+   filterMySuscriptions.checked=false;
+   btnClearFilters.hidden=true;
+}
+
+//#endregion
+
+//#region ADD SERVOCES
+
+let btnAddServiceBlank = document.getElementById("btnAddServiceBlank");
+let jsonNewPublish;
+
+btnAddServiceBlank.onclick = (e) =>{
+    
+    let listaServicios = document.getElementById("sectionListServices");
+
+    let lblNameService= document.createElement("label");
+    lblNameService.innerText="Nombre ";
+    let nameService = document.createElement("input");
+    lblNameService.appendChild(nameService);
+
+    let lblorigin = document.createElement("label");
+    lblorigin.innerText="Origen ";
+    let origin = document.createElement("input");
+    lblorigin.appendChild(origin);
+
+    let lblDestination = document.createElement("label");
+    lblDestination.innerText="Destino ";
+    let destination = document.createElement("input");
+    lblDestination.appendChild(destination);
+
+    let lblDateEnd = document.createElement("label");
+    lblDateEnd.innerText="Fecha Fin";
+    let dateEnd = document.createElement("input");
+    lblDateEnd.appendChild(dateEnd);
+
+    let lblBadget = document.createElement("label");
+    lblBadget.innerText="Presupuesto";
+    let badget = document.createElement("input");
+    lblBadget.appendChild(badget);
+
+    let btnPublishService = document.createElement("button");
+    btnPublishService.innerText="Publicar";
+
+    //Agrego un salto
+    let jumpNewServiceIni = document.createElement("br");
+    listaServicios.appendChild(jumpNewServiceIni);
+
+    listaServicios.appendChild(lblNameService);
+    listaServicios.appendChild(lblorigin);
+    listaServicios.appendChild(lblDestination);
+    listaServicios.appendChild(lblDateEnd);
+    listaServicios.appendChild(lblBadget);
+    listaServicios.appendChild(btnPublishService);
+    let jumpNewServiceEnd = document.createElement("br");
+    listaServicios.appendChild(jumpNewServiceEnd);
+
+    nameService.value="nombre";
+    origin.value="rosario";
+    destination.value="CABA";
+    dateEnd="01/01/2022";
+    badget="123.00";
+    let nuevaPublicacion=new Publicacion(nameService, origin, destination, dateEnd, badget);
+    jsonNewPublish = JSON.stringify(nuevaPublicacion);
+    console.log(nuevaPublicacion);
+    console.log(jsonNewPublish);
+
+    //Muestro elJavaScript como objeto JSon
+    let parrafoJSON = document.createElement("p");
+    parrafoJSON.innerText=jsonNewPublish;
+    listaServicios.appendChild(parrafoJSON);
+
+    let jump = document.createElement("br");
+    listaServicios.appendChild(jump);
+    
+    //Muestro el JSon como objeto JavaScript
+    let jsonToJS = JSON.parse(jsonNewPublish);    
+    let parrafoJS = document.createElement("p");
+    parrafoJS.innerText=jsonToJS;
+    listaServicios.appendChild(parrafoJS);
+ };
+//#endregion
+
+
+const showServices = () =>{
+    // Obtenemos el div que contendrá los servicios
+	let contenedor = document.getElementById("sectionListServices");
+	contenedor.innerHTML = "";
+
+	// Recorremos el array y por cada item imprimimos un servicio
+	for (const p of publicaciones ) {
+		// Creamos el contendor individual para cada servicio
+		let serv = document.createElement("div");
+		// Agregamos el contenido al servicio
+		serv.innerHTML = `
+        <div class="card text-center" style="width: 18rem;">
+            <div class="card-body">
+                <h2 class="card-title">${p.nombre}</h2>
+                <h5 class="card-subtitle mb-2 text-muted">${p.origen}</h5>
+                <p class="card-text">$${p.destino}</p>
+
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <button id="agregar${alfajor.id}" type="button" class="btn btn-dark"> Agregar </button>
+                </div>
+            </div>
+        </div>      
+        `;
+		contenedor.appendChild(serv);
+		// Agregamos el evento al botón
+		let boton = document.getElementById(`agregar${alfajor.id}`);
+
+		boton.addEventListener("click", () => agregarAlCarrito(alfajor.id));
+		// boton.onclick = () => agregarAlCarrito(alfajor.id);
+	}
+}
+
+
+/*
 let  strMensaje="";publicConOferta=0;
 const mostarPublicacionesYOfertas = (actualizaString=0, mostarOfertas=0) => {
     let strTemp="";//=strMensaje;    
@@ -67,8 +245,6 @@ const mostarPublicacionesYOfertas = (actualizaString=0, mostarOfertas=0) => {
     console.clear();
     console.log(strTemp);
 }
-
-/*
 
 do {
     opcion=parseInt(prompt("------------------------------------\nMENU\n------------------------------------\n1-/Cargar Publicación\n2-/Ver Publicaciones\n3-/Cargar Oferta \n0-/Salir \nOpcion: "));    
@@ -181,119 +357,3 @@ btnNewService.onclick = (e) =>{
     sectionNewService.appendChild(newService);
 }
 */
-let btnLogin = document.getElementById("btnLogin");
-
-btnLogin.onclick = (e) =>{
-    let chkRememberUser = document.getElementById("chkRememberUser");    
-    let user=document.getElementById("loginUser").value;
-    if(user === "null")
-    {
-        alert("Ingrese un usuario");        
-    }
-    else
-    {
-        console.log(user);
-        if(chkRememberUser.checked===true)
-        {
-            localStorage.setItem("usuario",user);
-        }
-        else
-        {
-            sessionStorage.setItem("usuario",user);
-        }          
-    }    
-}
-
-
-let filters = document.getElementById("filters");
-let btnClearFilters = document.getElementById("btnClearFilters");
-/*
-btnClearFilters.onclick = (e) =>{
-   let filterOrigin = getElementById("filterOrigin");
-   filterOrigin.innerText="";
-   filters.append(filterOrigin);
-   
-   let destination = getElementById("filterdestination");
-   destination.innerText="";
-   let dateEnd = getElementById("filterDateEnd");
-   dateEnd.innerText="";
-   let myServices = getElementById("filterMyServices");
-   myServices.setSelected(false);
-}
-*/
-
-
-let btnAddServiceBlank = document.getElementById("btnAddServiceBlank");
-let jsonNewPublish;
-
-btnAddServiceBlank.onclick = (e) =>{
-    
-    let listaServicios = document.getElementById("sectionListServices");
-
-    let lblNameService= document.createElement("label");
-    lblNameService.innerText="Nombre ";
-    let nameService = document.createElement("input");
-    lblNameService.appendChild(nameService);
-
-    let lblorigin = document.createElement("label");
-    lblorigin.innerText="Origen ";
-    let origin = document.createElement("input");
-    lblorigin.appendChild(origin);
-
-    let lblDestination = document.createElement("label");
-    lblDestination.innerText="Destino ";
-    let destination = document.createElement("input");
-    lblDestination.appendChild(destination);
-
-    let lblDateEnd = document.createElement("label");
-    lblDateEnd.innerText="Fecha Fin";
-    let dateEnd = document.createElement("input");
-    lblDateEnd.appendChild(dateEnd);
-
-    let lblBadget = document.createElement("label");
-    lblBadget.innerText="Presupuesto";
-    let badget = document.createElement("input");
-    lblBadget.appendChild(badget);
-
-    let btnPublishService = document.createElement("button");
-    btnPublishService.innerText="Publicar";
-
-    //Agrego un salto
-    let jumpNewServiceIni = document.createElement("br");
-    listaServicios.appendChild(jumpNewServiceIni);
-
-    listaServicios.appendChild(lblNameService);
-    listaServicios.appendChild(lblorigin);
-    listaServicios.appendChild(lblDestination);
-    listaServicios.appendChild(lblDateEnd);
-    listaServicios.appendChild(lblBadget);
-    listaServicios.appendChild(btnPublishService);
-    let jumpNewServiceEnd = document.createElement("br");
-    listaServicios.appendChild(jumpNewServiceEnd);
-
-    nameService.value="nombre";
-    origin.value="rosario";
-    destination.value="CABA";
-    dateEnd="01/01/2022";
-    badget="123.00";
-    let nuevaPublicacion=new Publicacion(nameService, origin, destination, dateEnd, badget);
-    jsonNewPublish = JSON.stringify(nuevaPublicacion);
-    console.log(nuevaPublicacion);
-    console.log(jsonNewPublish);
-
-    //Muestro elJavaScript como objeto JSon
-    let parrafoJSON = document.createElement("p");
-    parrafoJSON.innerText=jsonNewPublish;
-    listaServicios.appendChild(parrafoJSON);
-
-    let jump = document.createElement("br");
-    listaServicios.appendChild(jump);
-    
-    //Muestro el JSon como objeto JavaScript
-    let jsonToJS = JSON.parse(jsonNewPublish);    
-    let parrafoJS = document.createElement("p");
-    parrafoJS.innerText=jsonToJS;
-    listaServicios.appendChild(parrafoJS);
- };
-
- 
